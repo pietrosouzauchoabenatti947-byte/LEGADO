@@ -5,10 +5,335 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LEGADO 2.0</title>
+  <style>
+    :root {
+      --bg: #09080d;
+      --panel: #17141b;
+      --gold: #d8b36c;
+      --text: #f5f0e7;
+      --muted: #aaa2ad;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+    header {
+      padding: 24px 18px;
+      text-align: center;
+      border-bottom: 1px solid #5c472b;
+    }
+    h1 {
+      margin: 0;
+      color: var(--gold);
+      letter-spacing: 3px;
+      font-size: 32px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 9px;
+      padding: 16px;
+    }
+    button, input {
+      font: inherit;
+    }
+    button {
+      background: #28212a;
+      border: 1px solid #8a6c3f;
+      color: var(--gold);
+      border-radius: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #3a2e30;
+    }
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--gold);
+    }
+    main {
+      max-width: 1000px;
+      margin: auto;
+      padding: 18px;
+    }
+    section { display: none; }
+    section.active { display: block; }
+    h2 { color: var(--gold); }
+    .hero {
+      text-align: center;
+      padding: 42px 15px;
+    }
+    .hero p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid #493b2d;
+      border-radius: 17px;
+      padding: 20px;
+    }
+    .card h3 { color: var(--gold); }
+    .card p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    input {
+      width: 100%;
+      background: #1d1a21;
+      color: white;
+      border: 1px solid #78603d;
+      border-radius: 12px;
+      padding: 14px;
+      margin: 12px 0 20px;
+    }
+    .chat {
+      min-height: 180px;
+      max-height: 350px;
+      overflow-y: auto;
+      background: #141119;
+      border: 1px solid #493b2d;
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+    .message {
+      padding: 10px;
+      margin: 9px 0;
+      border-radius: 10px;
+      background: #29232d;
+      overflow-wrap: anywhere;
+    }
+    .message strong { color: var(--gold); }
+    .chat-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .chat-actions input {
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 35px 15px;
+      font-size: 12px;
+    }
+  </style>
 </head>
-<body style="background:#09090d;color:#d8b66e;text-align:center;font-family:Arial;padding:50px 15px;">
-  <h1>LEGADO 2.0</h1>
-  <p>O universo das nossas criações.</p>
-  <p>AURA está chegando...</p>
+<body>
+  <header>
+    <h1>LEGADO 2.0</h1>
+    <p class="subtitle">O universo das nossas criações</p>
+  </header>
+
+  <nav aria-label="Navegação principal">
+    <button onclick="showPage('inicio')">Início</button>
+    <button onclick="showPage('biblioteca')">Biblioteca</button>
+    <button onclick="showPage('aura')">AURA</button>
+  </nav>
+
+  <main>
+    <section id="inicio" class="active">
+      <div class="hero">
+        <h2>Bem-vindo ao LEGADO</h2>
+        <p>
+          Um espaço para reunir nossas ideias,
+          projetos, experiências e criações.
+        </p>
+        <button onclick="showPage('biblioteca')">
+          Explorar projetos
+        </button>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>📚 Biblioteca</h3>
+          <p>Conheça os projetos do nosso universo.</p>
+        </div>
+        <div class="card">
+          <h3>✨ AURA</h3>
+          <p>A futura assistente inteligente do LEGADO.</p>
+        </div>
+        <div class="card">
+          <h3>🌌 Nossa história</h3>
+          <p>Um lugar para preservar a evolução das criações.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="biblioteca">
+      <h2>Biblioteca de projetos</h2>
+      <p>Explore as principais criações do LEGADO.</p>
+
+      <input
+        id="search"
+        placeholder="Pesquisar projetos..."
+        aria-label="Pesquisar projetos"
+        oninput="renderProjects()"
+      >
+
+      <div id="projects" class="grid"></div>
+    </section>
+
+    <section id="aura">
+      <h2>✨ AURA</h2>
+      <p>Assistente do universo LEGADO</p>
+
+      <div id="chat" class="chat" aria-live="polite">
+        <div class="message">
+          <strong>AURA:</strong>
+          Olá! Bem-vindo ao LEGADO.
+          Esta é minha interface inicial.
+        </div>
+      </div>
+
+      <div class="chat-actions">
+        <input
+          id="message"
+          placeholder="Escreva sua mensagem..."
+          aria-label="Mensagem para AURA"
+          onkeydown="if(event.key==='Enter')sendMessage()"
+        >
+        <button onclick="sendMessage()">Enviar</button>
+      </div>
+
+      <p class="subtitle">
+        A conexão com a inteligência artificial
+        e a voz Bella será adicionada depois.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    LEGADO 2.0 — O universo das nossas criações
+  </footer>
+
+  <script>
+    const projects = [
+      {
+        name: "VAL AURE VERO",
+        category: "Marca",
+        description: "Marca de moda e loja virtual."
+      },
+      {
+        name: "QUIZVERSE",
+        category: "Jogos",
+        description: "Universo de jogos e conhecimento."
+      },
+      {
+        name: "Áureon",
+        category: "Jogos",
+        description: "Projeto de álbum de figurinhas."
+      },
+      {
+        name: "Central Humanitária RS",
+        category: "Sistemas",
+        description: "Projeto de gestão humanitária."
+      },
+      {
+        name: "Reino Animal",
+        category: "Arte",
+        description: "Coleção de desenhos minimalistas."
+      },
+      {
+        name: "LEGADO",
+        category: "Sistemas",
+        description: "Central das nossas criações."
+      }
+    ];
+
+    function showPage(id) {
+      document.querySelectorAll("main section")
+        .forEach(section => {
+          section.classList.toggle(
+            "active",
+            section.id === id
+          );
+        });
+      window.scrollTo(0, 0);
+    }
+
+    function renderProjects() {
+      const term = document.getElementById("search")
+        .value.toLocaleLowerCase("pt-BR");
+
+      const container = document.getElementById("projects");
+      container.replaceChildren();
+
+      const filtered = projects.filter(project =>
+        (project.name + " " + project.category)
+          .toLocaleLowerCase("pt-BR")
+          .includes(term)
+      );
+
+      if (!filtered.length) {
+        container.textContent = "Nenhum projeto encontrado.";
+        return;
+      }
+
+      filtered.forEach(project => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const title = document.createElement("h3");
+        title.textContent = project.name;
+
+        const category = document.createElement("small");
+        category.textContent = project.category;
+
+        const description = document.createElement("p");
+        description.textContent = project.description;
+
+        card.append(title, category, description);
+        container.appendChild(card);
+      });
+    }
+
+    function addMessage(author, text) {
+      const chat = document.getElementById("chat");
+      const message = document.createElement("div");
+      message.className = "message";
+
+      const name = document.createElement("strong");
+      name.textContent = author + ": ";
+
+      message.append(name, document.createTextNode(text));
+      chat.appendChild(message);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("message");
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      addMessage("Você", text);
+      input.value = "";
+
+      addMessage(
+        "AURA",
+        "Recebi sua mensagem! Minha conexão com a IA " +
+        "ainda está em desenvolvimento."
+      );
+    }
+
+    renderProjects();
+  </script>
 </body>
 </html>
